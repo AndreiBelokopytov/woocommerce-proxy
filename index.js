@@ -43,7 +43,8 @@ function wooCommerceProxyGet(url, urlParams) {
     const path = urlParams
       ? urlParams.map(item => ctx.params[item]).join("/")
       : null;
-    const fullUrl = path ? url + "/" + path : url;
+    let fullUrl = path ? url + "/" + path : url;
+    fullUrl = ctx.querystring ? fullUrl + "?" + ctx.querystring : fullUrl;
     let response = client.get(fullUrl);
     if (!response) {
       try {
