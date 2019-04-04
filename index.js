@@ -33,7 +33,16 @@ function getWPTotal(headers) {
 
 async function handleWooCommerceResponse(url) {
   const response = await wooCommerce.getAsync(url);
-  const results = JSON.parse(response.body);
+  if (response.status !== 200) {
+    throw new Error(`Invalid response status for url /${url}: ${response.statusCode} ${response.statusMessage}`);
+  }
+  let results;
+  try {
+    results = JSON.parse(response.body);
+  } catch (e) {
+    throw new Error(`Invalid response body for url /${url}: ${response.body}`);
+  }
+
   const wpTotal = getWPTotal(response.headers);
   return Object.assign({}, { results }, wpTotal);
 }
@@ -54,11 +63,7 @@ function wooCommerceProxyGet(url, urlParams) {
         client.expire(fullUrl, TTL);
         next();
       } catch (err) {
-        if (err.response && err.response.statusCode) {
-          ctx.throw(err.response.statusCode, err.message);
-        } else {
-          throw err;
-        }
+        ctx.throw(500, err.message);
         next();
       }
     } else {
@@ -85,7 +90,9 @@ app
   .use(cors());
 
 app.on("error", (err, ctx) => {
-  console.log("server error", err, ctx);
+  console.log(">>>> Server error");
+  console.log(err.message);
+  console.log("====");
 });
 
 if (process.env.NODE_ENV === "development") {
