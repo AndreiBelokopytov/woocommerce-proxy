@@ -17,7 +17,8 @@ const wooCommerce = new WooCommerce({
   consumerKey: process.env.WOOCOMMERCE_API_KEY,
   consumerSecret: process.env.WOOCOMMERCE_API_SECRET,
   wpAPI: true,
-  version: "wc/v2"
+  version: "wc/v2",
+  queryStringAuth: true
 });
 
 function getWPTotal(headers) {
@@ -33,7 +34,7 @@ function getWPTotal(headers) {
 
 async function handleWooCommerceResponse(url) {
   const response = await wooCommerce.getAsync(url);
-  if (response.status !== 200) {
+  if (response.statusCode !== 200) {
     throw new Error(`Invalid response status for url /${url}: ${response.statusCode} ${response.statusMessage}`);
   }
   let results;
