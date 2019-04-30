@@ -13,8 +13,9 @@
     "@koa/cors": "^2.2.3",
     "@mediaxpost/memory-cache": "^1.2.0",
     "dotenv": "^6.2.0",
-    "koa": "^2.6.2",
+    "koa": "^2.7.0",
     "koa-better-router": "^2.1.1",
+    "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "woocommerce-api": "^1.4.2"
   }
